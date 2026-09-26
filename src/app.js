@@ -6,9 +6,35 @@ const express=require("express");
 
 const app=express();
 
-app.get("/",(req,res)=>{
-    res.send("Hello i am gauriiii");
-})
+app.get("/user",
+    (req,res,next)=>{
+    console.log("Handling request 1")
+    
+    next();
+},
+(req,res,next)=>{
+    console.log("Handling request 2")
+    
+    next();
+},
+(req,res,next)=>{
+    console.log("Handling request 3")
+    
+    next();
+},
+(req,res,next)=>{
+    console.log("Handling request 4")
+    res.send("Response 1");
+    
+});
+
+app.post("/user",(req,res)=>{
+    res.send("Data added successfully");
+});
+
+app.delete("/user",(req,res)=>{
+    res.send("data deleted successfully")
+});
 // app.listen(3000)->starts server at port 3000, () => { ... } → function that runs after the server starts
 // console.log(...) → prints a message in your terminal
 app.listen(3000, () => {  
