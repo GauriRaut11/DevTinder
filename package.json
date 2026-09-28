@@ -12,11 +12,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-     "start": "node app.js",
-     "dev": "npx nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.10.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
