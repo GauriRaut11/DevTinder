@@ -2,70 +2,28 @@
 const express=require("express"); 
 const connectdb=require("./config/database");
 const User=require("./models/user");
-const user = require("./models/user");
+const cors=require("cors");
+const cookies=require("cookie-parser");//And cookies reads/parses the Cookie
 // calls that application fuction and retuns a application object which is stored in the app.
 // now app contains all the functions needed to configure and run your Express application.like app.get 
 const app=express();
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true,
+}
+
+));
 app.use(express.json());//express.json() is itself middleware. Express handles the next() call internally.
 // get all users 
-app.get("/feed",async (req,res)=>{
-    try{
- const user=await User.find({});
- res.send(user);
-    }catch(err){
-        res.send(500).send("something went wrong")
-    }
-})
-// get a single user
-app.get("/user", async (req,res)=>{
-    const useremail=req.body.emailId;
-    try{
-        const users=await User.find ({emailId:useremail});//this func finds the document using email and stores it in a array user is a array here
-        if(users.length==0){
-          res.send("user not found");
-        } 
-        res.send(users);
-    }catch(err){
-        res.status(404).send("Something went wrong")
-    }
-});
-app.delete("/delete",async(req,res)=>{
-    const userId=req.body.emailId;
- try{
-    const user=await User.findByIdAndDelete(userId);
-    res.send("deleted");
- }catch(err){
-    res.status(404).send("Something went wrong");
- }
-});
-
-app.patch("/update",async(req,res)=>{
-    const userid=req.body._id;
-    const data=req.body;
-    try{
-        await User.findByIdAndUpdate({_id:userid},data);
-        res.send("Updated successfullly");
-    }catch(err){
-        res.send("something went wrong"); 
-    }
-})
-
-
-app.post("/signup",async (req,res)=>{
-// creating a instance of the model User
-const user=new User(req.body);
-try{
-await user.save();// this func saves document to the database 
-res.send("document added to the database");
-console.log(req.body);
-}catch(err){
-res.status(101).send("Error in adding data")
-}
-});
-
-
-
-
+app.use(cookies());//run the cookies--which is a parser for every incoming requests
+const authrouter=require("./routers/auth");
+const profilerouter=require("./routers/profile");
+const requestRouter=require("./routers/request")
+const userRouter=require("./routers/user")
+app.use("/",authrouter);
+app.use("/",profilerouter);
+app.use("/",requestRouter);
+app.use("/",userRouter);
 
 
 
